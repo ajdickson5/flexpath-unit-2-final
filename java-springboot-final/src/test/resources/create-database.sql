@@ -53,4 +53,3 @@ insert into order_items (order_id, product_id, quantity) values (2, 2, 2);
 insert into order_items (order_id, product_id, quantity) values (3, 3, 3);
 insert into order_items (order_id, product_id, quantity) values (4, 4, 4);
 insert into order_items (order_id, product_id, quantity) values (5, 5, 5);
-

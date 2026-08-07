@@ -1,52 +1,56 @@
-create database if not exists web_shop;
-use web_shop;
+-- 1. Create database (Must be run separately, usually via psql or pgAdmin)
+-- Postgres does not support IF NOT EXISTS for databases.
+-- CREATE DATABASE web_shop;
 
-drop table if exists users, roles, products, orders, order_items;
+-- 2. Drop tables in correct dependency order (child tables first)
+DROP TABLE IF EXISTS order_items, orders, products, roles, users;
 
-create table users (
-    username varchar(255) primary key,
-    password varchar(255)
+-- 3. Create tables using SERIAL for auto-incrementing IDs
+CREATE TABLE users (
+    username VARCHAR(255) PRIMARY KEY,
+    password VARCHAR(255)
 );
 
-create table roles (
-    username varchar(255) not null,
-    role varchar(250) not null,
-    primary key (username, role),
-    foreign key (username) references users(username) on delete cascade
+CREATE TABLE roles (
+    username VARCHAR(255) NOT NULL,
+    role VARCHAR(250) NOT NULL,
+    PRIMARY KEY (username, role),
+    FOREIGN KEY (username) REFERENCES users(username) ON DELETE CASCADE
 );
 
-create table products (
-    id int primary key auto_increment,
-    name varchar(255),
-    price decimal(10, 2)
+CREATE TABLE products (
+    id SERIAL PRIMARY KEY, -- Changed from 'int primary key auto_increment'
+    name VARCHAR(255),
+    price DECIMAL(10, 2)
 );
 
-create table orders (
-    id int primary key auto_increment,
-    username varchar(255),
-    foreign key (username) references users(username) on delete cascade
+CREATE TABLE orders (
+    id SERIAL PRIMARY KEY, -- Changed from 'int primary key auto_increment'
+    username VARCHAR(255),
+    FOREIGN KEY (username) REFERENCES users(username) ON DELETE CASCADE
 );
 
-create table order_items (
-    id int primary key auto_increment,
-    order_id int,
-    product_id int,
-    quantity int,
-    foreign key (order_id) references orders(id) on delete cascade,
-    foreign key (product_id) references products(id) on delete cascade
+CREATE TABLE order_items (
+    id SERIAL PRIMARY KEY, -- Changed from 'int primary key auto_increment'
+    order_id INT,
+    product_id INT,
+    quantity INT,
+    FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE,
+    FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE
 );
 
-insert into users (username, password) values ('admin', '$2a$10$tBTfzHzjmQVKza3VSa5lsOX6/iL93xPVLlLXYg2FhT6a.jb1o6VDq');
-insert into roles (username, role) values ('admin', 'ADMIN');
+-- 4. Insert data
+INSERT INTO users (username, password) VALUES ('admin', '$2a$10$tBTfzHzjmQVKza3VSa5lsOX6/iL93xPVLlLXYg2FhT6a.jb1o6VDq');
+INSERT INTO roles (username, role) VALUES ('admin', 'ADMIN');
 
-insert into products (name, price) values ('Apple', 0.99);
-insert into products (name, price) values ('Banana', 0.59);
-insert into products (name, price) values ('Cherry', 1.99);
-insert into products (name, price) values ('Date', 2.99);
-insert into products (name, price) values ('Elderberry', 3.99);
+INSERT INTO products (name, price) VALUES ('Apple', 0.99);
+INSERT INTO products (name, price) VALUES ('Banana', 0.59);
+INSERT INTO products (name, price) VALUES ('Cherry', 1.99);
+INSERT INTO products (name, price) VALUES ('Date', 2.99);
+INSERT INTO products (name, price) VALUES ('Elderberry', 3.99);
 
-insert into orders (username) values ('admin');
-insert into orders (username) values ('admin');
-insert into orders (username) values ('admin');
-insert into orders (username) values ('admin');
-insert into orders (username) values ('admin');
+INSERT INTO orders (username) VALUES ('admin');
+INSERT INTO orders (username) VALUES ('admin');
+INSERT INTO orders (username) VALUES ('admin');
+INSERT INTO orders (username) VALUES ('admin');
+INSERT INTO orders (username) VALUES ('admin');

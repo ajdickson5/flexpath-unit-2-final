@@ -1,5 +1,7 @@
 package org.example.exceptions;
 
+import org.springframework.http.HttpStatus;
+
 /**
  * General purpose exception class for DAO operations.
  */
