@@ -23,19 +23,27 @@ public class FinalTestConfiguration {
      * @throws ManagedProcessException If an error occurs while starting the embedded MariaDB instance.
      */
     @Bean
-    public DataSource dataSource() throws ManagedProcessException {
-        var configBuilder = DBConfigurationBuilder.newBuilder();
-        configBuilder.setPort(0);
-
-        var db = DB.newEmbeddedDB(configBuilder.build());
-        db.start();
-        db.createDB("test", "root", "");
-
+    public DataSource dataSource() {
         return DataSourceBuilder.create()
-            .url("jdbc:mariadb://localhost:" + db.getConfiguration().getPort() + "/test")
-            .username("root")
+            .url("jdbc:h2:mem:test;MODE=MySQL;DB_CLOSE_DELAY=-1")
+            .driverClassName("org.h2.Driver")
+            .username("sa")
+            .password("")
             .build();
     }
+    // public DataSource dataSource() throws ManagedProcessException {
+    //     var configBuilder = DBConfigurationBuilder.newBuilder();
+    //     configBuilder.setPort(0);
+
+    //     var db = DB.newEmbeddedDB(configBuilder.build());
+    //     db.start();
+    //     db.createDB("test", "root", "");
+
+    //     return DataSourceBuilder.create()
+    //         .url("jdbc:mariadb://localhost:" + db.getConfiguration().getPort() + "/test")
+    //         .username("root")
+    //         .build();
+    // }
 
     /**
      * Creates a password encoder bean that does not encode passwords.
